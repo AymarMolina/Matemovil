@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "155985457702",
+    "project_id": "proyecto-2bcdf",
+    "storage_bucket": "proyecto-2bcdf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155985457702:android:91dd0f542b5398965e6ce7",
+        "android_client_info": {
+          "package_name": "com.example.matemovil"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtpptsyVcPKufO6qxXvQqesjQhvGRbFQ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

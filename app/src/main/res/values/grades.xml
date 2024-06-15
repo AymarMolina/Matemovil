@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="grados">
+        <item>1er Grado</item>
+        <item>2do Grado</item>
+        <item>3er Grado</item>
+        <item>4to Grado</item>
+        <item>5to Grado</item>
+        <item>6to Grado</item>
+    </string-array>
+</resources>
