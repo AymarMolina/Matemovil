@@ -1,8 +1,11 @@
 package com.example.matemovil;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,6 +43,7 @@ import java.util.Map;
 public class Registar extends AppCompatActivity {
     Button btn_registrar;
     private EditText pass,email;
+    private static final String TAG = "EmailPassword";
     Spinner grade;
     EditText nom,age;
     private FirebaseAuth mAuth;
@@ -52,11 +56,6 @@ public class Registar extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
         pass=findViewById(R.id.txtContrasena);
         nom=findViewById(R.id.txtNombres);
         age=findViewById(R.id.txtEdad);
@@ -70,7 +69,14 @@ public class Registar extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            reload();
+        }
     }
+
+    private void reload() {
+    }
+
     public void redic(View v){
         Intent objint=new Intent(Registar.this, MainActivity.class);
         startActivity(objint);
@@ -80,21 +86,27 @@ public class Registar extends AppCompatActivity {
 
         try
         {
-            mAuth.createUserWithEmailAndPassword(email.getText().toString(),pass.getText().toString())
-                    .addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
+            mAuth.createUserWithEmailAndPassword(email.getText().toString(), pass.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
                                 Toast.makeText(getApplicationContext(),"Alumno creado",Toast.LENGTH_SHORT).show();
                                 FirebaseUser user=mAuth.getCurrentUser();
                                 Intent i=new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(i);
-
-                            }else{
-                                Toast.makeText(getApplicationContext(),"Error al registrar",Toast.LENGTH_SHORT).show();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                Toast.makeText(Registar.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                                updateUI(null);
                             }
                         }
                     });
+
+
 
             String p_nombre = nom.getText().toString();
             String p_edad = age.getText().toString();
@@ -116,7 +128,7 @@ public class Registar extends AppCompatActivity {
             }else {
                 progressDialog.show();
                 progressDialog.dismiss();
-                StringRequest request =new StringRequest(Request.Method.POST, "http://192.168.18.137:80/Matemovil/Usuarios/insertar_.php",
+                StringRequest request =new StringRequest(Request.Method.POST, "http://192.168.18.4:80/Matemovil/Usuarios/insertar_.php",
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -150,7 +162,6 @@ public class Registar extends AppCompatActivity {
                 RequestQueue requestQueue = Volley.newRequestQueue(Registar.this);
                 requestQueue.add(request);
             }
-            Toast.makeText(this,"Alumno registrado",Toast.LENGTH_SHORT).show();
             pass.setText("");
             email.setText("");
             nom.setText("");
@@ -162,6 +173,10 @@ public class Registar extends AppCompatActivity {
             Toast.makeText(this,"Verificar datos a ingresar",Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void updateUI(Object o) {
+    }
+
     public void insert()
     {
 

@@ -56,12 +56,19 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                          FirebaseUser user=mAuth.getCurrentUser();
-                            Toast.makeText(getApplicationContext(),"Iniciando sesión....",
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            String userEmail = user.getEmail();
+                            Toast.makeText(getApplicationContext(), "Iniciando sesión....",
                                     Toast.LENGTH_SHORT).show();
-                        }else{
-                            Toast.makeText(getApplicationContext(),"Correo o contraseña invalidos",
+
+                            Intent intent = new Intent(getApplicationContext(), temas.class);
+                            intent.putExtra("userEmail",userEmail);
+                            startActivity(intent);
+
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Correo o contraseña inválidos",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

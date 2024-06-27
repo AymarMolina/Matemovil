@@ -15,43 +15,6 @@
         android:theme="@style/Theme.Matemovil"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <receiver
-            android:name=".list_item"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/list_item_info" />
-        </receiver>
-        <receiver
-            android:name=".item_list"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/item_list_info" />
-        </receiver>
-        <receiver
-            android:name=".listThemes"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/list_themes_info" />
-        </receiver>
-
-        <activity
-            android:name=".Temas"
-            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
@@ -66,6 +29,24 @@
         </activity>
         <activity
             android:name=".Registar"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".temas"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Ejercicios"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

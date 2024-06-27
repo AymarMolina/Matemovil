@@ -2,12 +2,13 @@ package com.example.matemovil;
 
 public class Tema {
     String id;
-    String nombre, urlImagen;
+    String nombre, urlImagen,grado;
 
-    public Tema(String id, String nombre, String urlImagen) {
+    public Tema(String id, String nombre, String urlImagen, String grado) {
         this.id = id;
         this.nombre = nombre;
         this.urlImagen = urlImagen;
+        this.grado = grado;
     }
 
     public String getId() {
@@ -32,5 +33,13 @@ public class Tema {
 
     public void setUrlImagen(String urlImagen) {
         this.urlImagen = urlImagen;
+    }
+
+    public String getGrado() {
+        return grado;
+    }
+
+    public void setGrado(String grado) {
+        this.grado = grado;
     }
 }

@@ -3,9 +3,9 @@ package com.example.matemovil;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +13,10 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.matemovil.databinding.ActivityTemasBinding;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,70 +35,63 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class Temas extends AppCompatActivity {
-   /* ActivityListarBinding binding;
-
-    ImageButton boton_imagen;
+public class temas extends AppCompatActivity {
+    ActivityTemasBinding binding;
+    private TextView user;
     public static ArrayList<Tema> listaTemas;
     private RequestQueue rq;
     private RecyclerView lst1;
-    private AdaptadorUsuario adaptadorTema;
-    String id , nombre, foto;
+    String id,nombre,foto,grado;
+    private AdaptadorUsuario adaptadorUsuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_temas);
-        binding = ActivityListarBinding.inflate(getLayoutInflater());
+        String userEmail = getIntent().getStringExtra("userEmail");
+
+        binding = ActivityTemasBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        boton_imagen=findViewById(R.id.imageButton);
-        lst1=findViewById(R.id.lst1);
+        user=findViewById(R.id.usuario);
+        user.setText(userEmail);
 
-        boton_imagen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Toast.makeText(Temas.this, "Registrar Datos", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(i);
-                finish();
-            }
-        });
         listaTemas=new ArrayList<>();
         rq= Volley.newRequestQueue(this);
 
         cargarPersona();
-
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
+        lst1 = binding.lst1;
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         lst1.setLayoutManager(linearLayoutManager);
-        adaptadorTema=new AdaptadorUsuario();
-        lst1.setAdapter(adaptadorTema);
+        adaptadorUsuario = new AdaptadorUsuario();
+        lst1.setAdapter(adaptadorUsuario);
+
 
     }
-    private void cargarPersona() {
-        String url="http://192.168.18.137:80/Matemovil/Temas/mostrar_.php";
+    private void cargarPersona(){
+        String userEmail = getIntent().getStringExtra("userEmail");
+        String url = "http://192.168.18.4:80/Matemovil/Temas/mostrar_.php?userEmail=" + userEmail;
         JsonObjectRequest requerimiento=new JsonObjectRequest(Request.Method.GET,
                 url,
                 null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.d("temas", "Respuesta JSON: " + response.toString());
                         try {
-                            String valor=response.get("datos").toString();
-                            JSONArray arreglo=new JSONArray(valor);
-                            JSONArray jsonArray =response.getJSONArray("datos");
+                            String valor = response.get("datos").toString();
+                            JSONArray arreglo = new JSONArray(valor);
+                            JSONArray jsonArray = response.getJSONArray("datos");
 
-                            for(int i=0;i<jsonArray.length();i++)
-                            {
-                                JSONObject objeto = new JSONObject(arreglo.get(i).toString());
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject objeto = jsonArray.getJSONObject(i);
                                 id = objeto.getString("id");
                                 nombre = objeto.getString("nombre");
                                 foto = objeto.getString("urlimagen");
+                                grado = objeto.getString("grado");
 
-
-                                Tema usuario = new Tema(id,nombre, foto);
-                                listaTemas.add(usuario);
-                                adaptadorTema.notifyItemRangeInserted(listaTemas.size(), i);
+                                Tema tema = new Tema(id, nombre, foto, grado);
+                                listaTemas.add(tema);
+                                adaptadorUsuario.notifyItemInserted(listaTemas.size() - 1);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -103,22 +101,35 @@ public class Temas extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        Log.e("temas", "Error en la solicitud HTTP: " + error.toString());
+                        error.printStackTrace();
                     }
                 });
         rq.add(requerimiento);
     }
     private class AdaptadorUsuario extends RecyclerView.Adapter<AdaptadorUsuario.AdaptadorUsuarioHolder>{
-
+        private OnItemClickListener listener;
         @NonNull
         @Override
         public AdaptadorUsuarioHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new AdaptadorUsuarioHolder(getLayoutInflater().inflate(R.layout.item_lst,parent,false));
+            return new AdaptadorUsuarioHolder(getLayoutInflater().inflate(R.layout.item_list,parent,false));
         }
 
         @Override
         public void onBindViewHolder(@NonNull AdaptadorUsuarioHolder holder, int position) {
             holder.imprimir(position);
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String temaId = listaTemas.get(position).getId();
+                    String Tema=listaTemas.get(position).getNombre();
+                    Intent intent = new Intent(getApplicationContext(), Ejercicios.class);
+                    intent.putExtra("idTema", temaId);
+                    intent.putExtra("Tema",Tema);
+                    startActivity(intent);
+                }
+            });
+
         }
 
         @Override
@@ -126,13 +137,16 @@ public class Temas extends AppCompatActivity {
             return listaTemas.size();
         }
 
+
         class AdaptadorUsuarioHolder extends RecyclerView.ViewHolder {
             TextView tvNombre;
             ImageView ivFoto;
+            public CardView cardView;
             public AdaptadorUsuarioHolder(@NonNull View itemView) {
                 super(itemView);
-                tvNombre=itemView.findViewById(R.id.tema);
+                tvNombre=itemView.findViewById(R.id.nombre);
                 ivFoto=itemView.findViewById(R.id.listImage);
+                cardView=itemView.findViewById(R.id.main_container);
             }
 
             public void imprimir(int position) {
@@ -161,6 +175,7 @@ public class Temas extends AppCompatActivity {
                         });
                 rq.add(peticion);
             }
+
         }
-    }*/
+    }
 }

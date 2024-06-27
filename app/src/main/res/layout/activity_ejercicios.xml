@@ -11,7 +11,7 @@
     android:paddingRight="20dp"
     android:orientation="vertical"
     android:background="@drawable/fondo"
-    tools:context=".temas">
+    tools:context=".Ejercicios">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -20,12 +20,12 @@
         android:gravity="clip_horizontal">
 
         <TextView
-            android:id="@+id/tde"
+            android:id="@+id/bienve"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@color/white"
-            android:text="Bienvenido,"
+            android:text="Estas en el tema de "
             android:textSize="20dp"
             android:textStyle="bold" />
         <TextView
@@ -49,6 +49,6 @@
         android:dividerHeight="10.0sp"
         android:onClick="captu"
         android:scrollbars="vertical"
-        tools:listitem="@layout/item_list" />
+        tools:listitem="@layout/ejercicio_item" />
 
 </LinearLayout>
